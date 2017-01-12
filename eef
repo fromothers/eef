@@ -17,7 +17,7 @@ def ask_passphrase(confirm):
         confirm_passphrase = getpass.getpass(prompt='Confirm passphrase: ')
 
         if passphrase != confirm_passphrase:
-            raise Exception("Passphrase must match")
+            raise Exception("Error. Passphrase must match.")
 
     return passphrase
 
@@ -61,10 +61,12 @@ def encrypt_file(source, destination, passphrase):
     proc = subprocess.Popen(
         [
             "gpg",
-            "--cipher-algo",
-            "AES256",
+            "--cipher-algo", "AES256",
             "--quiet",
             "--symmetric",
+            "--s2k-mode", "3", 
+            "--s2k-digest-algo", "sha512", 
+            "--s2k-count", "1000000",
             "--yes",
             "--passphrase-fd", "0",
             "--output", destination,
